@@ -1,7 +1,5 @@
 package api.ramengo.model;
-
 import jakarta.persistence.*;
-
 @Entity
 @Table(name="orders")
 public class Order {
@@ -12,7 +10,12 @@ public class Order {
     private Broth broth;
     @ManyToOne(fetch = FetchType.LAZY)
     private Protein protein;
-
+    private String description;
+    public Order(){}
+    public Order(Broth broth, Protein protein) {
+        this.broth = broth;
+        this.protein = protein;
+    }
 
     public Long getId() {
         return id;

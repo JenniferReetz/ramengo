@@ -1,5 +1,6 @@
 package api.ramengo.model;
 
+import api.ramengo.dto.BrothDTO;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -19,12 +20,12 @@ public class Broth {
     public Broth() {
     }
 
-    public Broth(Long id, String image, String name, String description, Integer price) {
-        this.id = id;
-        this.image = image;
-        this.name = name;
-        this.description = description;
-        this.price = price;
+    public Broth(BrothDTO dto) {
+        this.id = dto.id();
+        this.image = dto.image();
+        this.name = dto.name();
+        this.description = dto.description();
+        this.price = dto.price();
     }
 
     public Long getId() {

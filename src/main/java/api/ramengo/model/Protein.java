@@ -1,5 +1,6 @@
 package api.ramengo.model;
 
+import api.ramengo.dto.ProteinDTO;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -14,17 +15,17 @@ public class Protein {
     private String name;
     private String description;
     private Integer price;
-    @OneToMany(mappedBy = "protein")
+    @OneToMany(mappedBy = "protein", fetch = FetchType.LAZY)
     private List<Order> orders;
     public Protein() {
     }
 
-    public Protein(Long id, String image, String name, String description, Integer price) {
-        this.id = id;
-        this.image = image;
-        this.name = name;
-        this.description = description;
-        this.price = price;
+    public Protein(ProteinDTO dto) {
+        this.id = dto.id();
+        this.image = dto.image();
+        this.name = dto.name();
+        this.description = dto.description();
+        this.price = dto.price();
     }
 
     public Long getId() {
