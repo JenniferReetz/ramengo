@@ -29,7 +29,7 @@ public class OrderController {
             String protein = order.getProtein().getName();
             String description = broth +" and " +protein + " Ramen";
             String image = "https://tech.redventures.com.br/icons/ramen/ramenChasu.png";
-            String response = "id: "+order.getId() +"\ndescription: " + description +"\nimage: "+ image;
+            String response = "\nid: "+ order.getId() +"\ndescription: " + description +"\nimage: "+ image ;
             return ResponseEntity.ok(response);
         } catch (ValidationException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

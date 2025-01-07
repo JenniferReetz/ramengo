@@ -19,6 +19,7 @@ public class OrderService {
     private ProteinRepository proteinRepository;
     @Autowired
     private OrderRepository repository;
+
     Long id;
 
     public Long getId() {
