@@ -2,6 +2,7 @@ package api.ramengo.service;
 
 import api.ramengo.dto.OrderDTO;
 
+import api.ramengo.dto.OrderResponseDTO;
 import api.ramengo.model.Broth;
 import api.ramengo.model.Order;
 import api.ramengo.model.Protein;
@@ -32,12 +33,19 @@ public class OrderService {
         return id;
     }
 
-    public void solicitar(OrderDTO dto) {
+    public OrderResponseDTO solicitar(OrderDTO dto) {
         Broth broth = brothRepository.getReferenceById(dto.brothId());
         Protein protein = proteinRepository.getReferenceById(dto.proteinId());
 
         Order order = new Order(broth, protein);
+        String description = broth.getName() + " and " + protein.getName() + " Ramen";
         this.id = repository.save(order).getId();
+        return new OrderResponseDTO(
+                this.id,
+                generateExternalOrderId(),
+                description,
+                "https://tech.redventures.com.br/icons/ramen/ramenChasu.png"
+                );
     }
     public String generateExternalOrderId() {
         String endpoint = "https://api.tech.redventures.com.br/orders/generate-id";

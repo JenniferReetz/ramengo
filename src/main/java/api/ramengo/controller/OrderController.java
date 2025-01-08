@@ -1,5 +1,6 @@
 package api.ramengo.controller;
 import api.ramengo.dto.OrderDTO;
+import api.ramengo.dto.OrderResponseDTO;
 import api.ramengo.model.Order;
 import api.ramengo.repository.OrderRepository;
 import api.ramengo.service.OrderService;
@@ -20,33 +21,16 @@ public class OrderController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<String> OrderRequest(@RequestBody @Valid OrderDTO dto) {
+    public ResponseEntity<OrderResponseDTO> OrderRequest(@RequestBody @Valid OrderDTO dto) {
         try {
-            // Processa o pedido local
-            this.orderService.solicitar(dto);
 
-            // Gera o ID externo
-            String externalOrderId = orderService.generateExternalOrderId();
+            OrderResponseDTO response = this.orderService.solicitar(dto);
+            return ResponseEntity.ok().body(response);
 
-            // Recupera os dados do pedido local
-            Long id = orderService.getId();
-            Order order = orderRepository.getReferenceById(id);
-            String broth = order.getBroth().getName();
-            String protein = order.getProtein().getName();
-            String description = broth + " and " + protein + " Ramen";
-            String image = "https://tech.redventures.com.br/icons/ramen/ramenChasu.png";
-
-            // Cria a resposta
-            String response = "\nInternal ID: " + order.getId() +
-                    "\nExternal ID: " + externalOrderId +
-                    "\nDescription: " + description +
-                    "\nImage: " + image;
-
-            return ResponseEntity.ok(response);
         } catch (ValidationException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(500).body("Erro ao gerar pedido: " + e.getMessage());
+            return ResponseEntity.status(500).body(null);
         }
     }
 }
