@@ -9,7 +9,12 @@ import api.ramengo.repository.BrothRepository;
 import api.ramengo.repository.OrderRepository;
 import api.ramengo.repository.ProteinRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class OrderService {
@@ -19,7 +24,8 @@ public class OrderService {
     private ProteinRepository proteinRepository;
     @Autowired
     private OrderRepository repository;
-
+    @Autowired
+    private RestTemplate restTemplate;
     Long id;
 
     public Long getId() {
@@ -33,5 +39,21 @@ public class OrderService {
         Order order = new Order(broth, protein);
         this.id = repository.save(order).getId();
     }
+    public String generateExternalOrderId() {
+        String endpoint = "https://api.tech.redventures.com.br/orders/generate-id";
+        String apiKey = "ZtVdh8XQ2U8pWI2gmZ7f796Vh8GllXoN7mr0djNf";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("x-api-key", apiKey);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(endpoint, HttpMethod.POST, entity, String.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response.getBody();
+        } else {
+            throw new RuntimeException("Erro ao gerar ID externo: " + response.getStatusCode());
+        }
+    }
 }

@@ -17,23 +17,36 @@ public class OrderController {
     private OrderService orderService;
     @Autowired
     private OrderRepository orderRepository;
+
     @PostMapping
     @Transactional
     public ResponseEntity<String> OrderRequest(@RequestBody @Valid OrderDTO dto) {
         try {
+            // Processa o pedido local
             this.orderService.solicitar(dto);
-            //tenta pegar o id
+
+            // Gera o ID externo
+            String externalOrderId = orderService.generateExternalOrderId();
+
+            // Recupera os dados do pedido local
             Long id = orderService.getId();
             Order order = orderRepository.getReferenceById(id);
             String broth = order.getBroth().getName();
             String protein = order.getProtein().getName();
-            String description = broth +" and " +protein + " Ramen";
+            String description = broth + " and " + protein + " Ramen";
             String image = "https://tech.redventures.com.br/icons/ramen/ramenChasu.png";
-            String response = "\nid: "+ order.getId() +"\ndescription: " + description +"\nimage: "+ image ;
+
+            // Cria a resposta
+            String response = "\nInternal ID: " + order.getId() +
+                    "\nExternal ID: " + externalOrderId +
+                    "\nDescription: " + description +
+                    "\nImage: " + image;
+
             return ResponseEntity.ok(response);
         } catch (ValidationException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).body("Erro ao gerar pedido: " + e.getMessage());
         }
     }
-
 }
