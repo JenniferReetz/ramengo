@@ -1,6 +1,7 @@
 package api.ramengo.service;
 
 import api.ramengo.dto.ProteinDTO;
+import api.ramengo.exceptions.ResourceNotFoundException;
 import api.ramengo.repository.ProteinRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,5 +18,7 @@ public class ProteinService {
                 .stream()
                 .map(ProteinDTO::new)
                 .toList();
+
+
     }
 }

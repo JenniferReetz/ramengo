@@ -1,6 +1,7 @@
 package api.ramengo.controller;
 
 import api.ramengo.dto.BrothDTO;
+import api.ramengo.exceptions.ResourceNotFoundException;
 import api.ramengo.service.BrothService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,10 @@ public class BrothController {
 
     @GetMapping
     public ResponseEntity<List<BrothDTO>> listarProteinas(){
-        List<BrothDTO> brots = brothService.buscarBroths();
-        return ResponseEntity.ok(brots);
+        List<BrothDTO> broths = brothService.buscarBroths();
+        if (broths.isEmpty()) {
+            throw new ResourceNotFoundException("No broths found in the database.");
+        }
+        return ResponseEntity.ok(broths);
     }
  }
