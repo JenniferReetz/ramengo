@@ -44,10 +44,11 @@ public class OrderService {
             String description = broth.getName() + " and " + protein.getName() + " Ramen";
 
 //            throw new InvalidOrderException("Broth ID and Protein ID are required to create an order.");
-
+            Long extenalId = generateExternalOrderId();
+            order.setExternalId(extenalId);
             this.id = repository.save(order).getId();
             return new OrderResponseDTO(
-                    generateExternalOrderId(),
+                    order.getExternalId(),
                     description,
                     "https://tech.redventures.com.br/icons/ramen/ramenChasu.png"
             );

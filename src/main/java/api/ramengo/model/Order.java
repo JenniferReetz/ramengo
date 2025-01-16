@@ -10,6 +10,16 @@ public class Order {
     private Broth broth;
     @ManyToOne(fetch = FetchType.LAZY)
     private Protein protein;
+    private Long externalId;
+
+    public Long getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(Long externalId) {
+        this.externalId = externalId;
+    }
+
     public Order(){}
     public Order(Broth broth, Protein protein) {
         this.broth = broth;
